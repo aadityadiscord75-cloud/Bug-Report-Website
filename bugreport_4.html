@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Bug Report — NexusGG</title>
+<title>Bug Report</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -24,7 +24,6 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .nav-logo{font-family:var(--font-display);font-size:18px;font-weight:800;letter-spacing:0.04em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:10px;}
 .nav-logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 20px var(--accent-glow);}
 .nav-logo span{color:var(--accent2);}
-.nav-actions{display:flex;align-items:center;gap:10px;}
 .nav-pill{font-size:12px;font-weight:600;letter-spacing:0.04em;font-family:var(--font-body);padding:6px 14px;border-radius:100px;cursor:pointer;transition:all 0.2s;border:1px solid;}
 .nav-pill.ghost{color:var(--text2);border-color:var(--border2);background:transparent;}
 .nav-pill.ghost:hover{color:var(--text);border-color:var(--border3);background:rgba(255,255,255,0.04);}
@@ -52,6 +51,13 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .s-dot.on{background:var(--green);box-shadow:0 0 8px rgba(34,197,94,0.6);}
 .s-dot.off{background:var(--amber);}
 
+/* LOADING */
+.loading-screen{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity 0.4s;}
+.loading-screen.hide{opacity:0;pointer-events:none;}
+.loading-spinner{width:36px;height:36px;border:3px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:14px;color:var(--text2);}
+
 .form-card{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:36px;box-shadow:0 24px 80px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.03);animation:fadeUp 0.7s 0.15s ease both;}
 .form-card-header{margin-bottom:28px;}
 .form-card-header h2{font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.01em;margin-bottom:4px;}
@@ -70,26 +76,14 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .fg textarea{resize:vertical;min-height:100px;line-height:1.65;}
 .form-divider{grid-column:1/-1;border:none;border-top:1px solid var(--border);margin:4px 0;}
 
-/* ── SCREENSHOT PASTE ZONE ── */
-.paste-zone{
-  grid-column:1/-1;
-  border:1.5px dashed var(--border2);border-radius:12px;
-  padding:24px;text-align:center;cursor:pointer;
-  transition:all 0.25s;position:relative;background:var(--bg2);
-  min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-}
+/* PASTE ZONE */
+.paste-zone{grid-column:1/-1;border:1.5px dashed var(--border2);border-radius:12px;padding:24px;text-align:center;cursor:pointer;transition:all 0.25s;position:relative;background:var(--bg2);min-height:100px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
 .paste-zone:hover,.paste-zone.drag-over{border-color:var(--accent);background:rgba(99,102,241,0.06);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
 .paste-zone-icon{font-size:28px;line-height:1;}
 .paste-zone-title{font-size:13px;font-weight:600;color:var(--text2);}
 .paste-zone-sub{font-size:11px;color:var(--text3);}
 .paste-zone kbd{display:inline-flex;align-items:center;padding:2px 7px;background:var(--card2);border:1px solid var(--border2);border-radius:5px;font-size:11px;font-family:monospace;color:var(--text2);}
-
-/* ── IMAGE PREVIEW ── */
-.img-preview{
-  grid-column:1/-1;
-  background:var(--bg2);border:1px solid var(--border2);border-radius:12px;
-  padding:12px;display:none;align-items:flex-start;gap:12px;
-}
+.img-preview{grid-column:1/-1;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:12px;display:none;align-items:flex-start;gap:12px;}
 .img-preview.show{display:flex;}
 .img-thumb{width:80px;height:60px;object-fit:cover;border-radius:8px;border:1px solid var(--border2);flex-shrink:0;}
 .img-info{flex:1;min-width:0;}
@@ -102,10 +96,8 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .submit-btn{width:100%;margin-top:20px;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;letter-spacing:0.02em;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 24px rgba(99,102,241,0.4);position:relative;overflow:hidden;}
 .submit-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.1) 0%,transparent 60%);pointer-events:none;}
 .submit-btn:hover:not(:disabled){background:#4f52d4;box-shadow:0 4px 32px rgba(99,102,241,0.55);transform:translateY(-1px);}
-.submit-btn:active:not(:disabled){transform:translateY(0);}
 .submit-btn:disabled{opacity:0.55;cursor:not-allowed;box-shadow:none;}
 .spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:none;}
-@keyframes spin{to{transform:rotate(360deg)}}
 .result-msg{text-align:center;padding:13px 16px;border-radius:10px;font-size:13px;font-weight:500;margin-top:14px;display:none;border:1px solid;}
 .result-msg.ok{background:rgba(34,197,94,0.08);color:#4ade80;border-color:rgba(34,197,94,0.2);}
 .result-msg.err{background:rgba(244,63,94,0.08);color:#fb7185;border-color:rgba(244,63,94,0.2);}
@@ -118,6 +110,33 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .admin-badge{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold2);background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.25);border-radius:100px;padding:3px 10px;}
 .admin-hd h2{font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.01em;}
 .admin-hd p{font-size:13px;color:var(--text2);}
+
+/* FIREBASE SETUP CARD */
+.firebase-setup{background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.2);border-radius:16px;padding:20px;margin-bottom:16px;}
+.firebase-setup-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.firebase-setup h3{font-family:var(--font-display);font-size:15px;font-weight:700;}
+.fb-status-pill{font-size:11px;font-weight:600;padding:3px 10px;border-radius:100px;border:1px solid;}
+.fb-status-pill.connected{background:rgba(34,197,94,0.1);color:#4ade80;border-color:rgba(34,197,94,0.25);}
+.fb-status-pill.disconnected{background:rgba(245,158,11,0.1);color:#fbbf24;border-color:rgba(245,158,11,0.25);}
+.firebase-setup p{font-size:12px;color:var(--text2);line-height:1.7;margin-bottom:14px;}
+.firebase-setup ol{font-size:12px;color:var(--text2);line-height:1.9;padding-left:18px;margin-bottom:16px;}
+.firebase-setup ol li{margin-bottom:2px;}
+.firebase-setup ol a{color:var(--accent3);text-decoration:none;}
+.firebase-setup ol a:hover{text-decoration:underline;}
+.fb-fields{display:flex;flex-direction:column;gap:10px;}
+.fb-field{display:flex;flex-direction:column;gap:5px;}
+.fb-field label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);}
+.fb-field input{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text);font-family:var(--font-body);outline:none;transition:all 0.2s;width:100%;}
+.fb-field input:focus{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
+.fb-field .hint{font-size:11px;color:var(--text3);line-height:1.6;margin-top:2px;}
+.fb-test-row{display:flex;gap:8px;margin-top:4px;}
+.fb-test-row input{flex:1;}
+.fb-connect-btn{padding:10px 16px;background:var(--accent);border:none;border-radius:10px;color:#fff;font-size:12px;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.fb-connect-btn:hover{background:#4f52d4;}
+.fb-msg{font-size:12px;margin-top:8px;display:none;font-weight:500;}
+.fb-msg.ok{color:#4ade80;}
+.fb-msg.err{color:#fb7185;}
+
 .asects{display:flex;flex-direction:column;gap:12px;}
 .acard{background:var(--card);border:1px solid var(--border2);border-radius:16px;overflow:hidden;}
 .acard-hd{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;cursor:pointer;transition:background 0.15s;user-select:none;}
@@ -138,7 +157,7 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .af:last-child{margin-bottom:0;}
 .af label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);}
 .af input,.af select{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--text);font-family:var(--font-body);outline:none;transition:all 0.2s;width:100%;}
-.af input:focus,.af select:focus{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
+.af input:focus{border-color:rgba(99,102,241,0.5);box-shadow:0 0 0 3px rgba(99,102,241,0.1);}
 .af .hint{font-size:11px;color:var(--text3);line-height:1.6;margin-top:2px;}
 .tag-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
 .tag-row{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:8px 12px;}
@@ -146,7 +165,7 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .tag-row input[type="color"]{width:26px;height:26px;border:none;border-radius:6px;padding:2px;background:var(--card2);cursor:pointer;}
 .del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;line-height:1;padding:0 2px;transition:color 0.15s;}
 .del-btn:hover{color:var(--red);}
-.add-btn{width:100%;padding:9px;background:transparent;border:1px dashed var(--border2);border-radius:10px;color:var(--text3);font-size:12px;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;letter-spacing:0.02em;}
+.add-btn{width:100%;padding:9px;background:transparent;border:1px dashed var(--border2);border-radius:10px;color:var(--text3);font-size:12px;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;}
 .add-btn:hover{border-color:var(--accent);color:var(--accent2);}
 .trow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border);}
 .trow:last-child{border-bottom:none;}
@@ -160,7 +179,10 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .tog input:checked+.tog-sl::before{transform:translateX(16px);background:var(--accent2);}
 .save-btn{width:100%;padding:13px;margin-top:20px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;box-shadow:0 4px 20px rgba(99,102,241,0.35);letter-spacing:0.02em;}
 .save-btn:hover{background:#4f52d4;transform:translateY(-1px);}
-.save-notice{text-align:center;font-size:13px;color:#4ade80;margin-top:10px;display:none;font-weight:500;}
+.save-btn:disabled{opacity:0.55;cursor:not-allowed;transform:none;}
+.save-notice{text-align:center;font-size:13px;margin-top:10px;display:none;font-weight:500;}
+.save-notice.ok{color:#4ade80;}
+.save-notice.err{color:#fb7185;}
 .pw-row{display:flex;gap:8px;}
 .pw-row input{flex:1;}
 .pw-upd-btn{padding:10px 14px;background:var(--card2);border:1px solid var(--border2);border-radius:10px;color:var(--text2);font-size:12px;font-weight:600;font-family:var(--font-body);cursor:pointer;white-space:nowrap;transition:all 0.2s;}
@@ -168,7 +190,7 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:500;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
 .overlay.hide{display:none;}
-.modal{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:40px 36px;width:100%;max-width:380px;box-shadow:0 32px 80px rgba(0,0,0,0.5),0 0 0 1px rgba(255,255,255,0.04);animation:modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:40px 36px;width:100%;max-width:380px;box-shadow:0 32px 80px rgba(0,0,0,0.5);animation:modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;}
 @keyframes modalIn{from{opacity:0;transform:scale(0.92) translateY(16px)}to{opacity:1;transform:scale(1) translateY(0)}}
 .modal-icon{width:48px;height:48px;background:rgba(99,102,241,0.12);border:1px solid rgba(99,102,241,0.25);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:20px;}
 .modal h2{font-family:var(--font-display);font-size:22px;font-weight:700;letter-spacing:-0.01em;margin-bottom:6px;}
@@ -176,7 +198,7 @@ nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;justify-co
 .modal input{width:100%;background:var(--bg2);border:1px solid var(--border2);border-radius:12px;padding:13px 16px;font-size:14px;color:var(--text);font-family:var(--font-body);outline:none;margin-bottom:12px;transition:all 0.2s;}
 .modal input:focus{border-color:rgba(99,102,241,0.6);box-shadow:0 0 0 3px rgba(99,102,241,0.12);}
 .modal input::placeholder{color:var(--text3);}
-.modal-btn{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;box-shadow:0 4px 20px rgba(99,102,241,0.35);letter-spacing:0.02em;}
+.modal-btn{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:600;font-family:var(--font-body);cursor:pointer;transition:all 0.2s;box-shadow:0 4px 20px rgba(99,102,241,0.35);}
 .modal-btn:hover{background:#4f52d4;}
 .modal-err{font-size:13px;color:#fb7185;margin-top:12px;display:none;text-align:center;font-weight:500;}
 
@@ -187,12 +209,18 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
 
 @media(max-width:600px){
   nav{padding:0 20px;}.hero{padding:64px 20px 56px;}.container{padding:0 16px 80px;}
-  .form-card{padding:24px 20px;}.form-grid{grid-template-columns:1fr;}.fg.s2{grid-column:1;}
+  .form-card{padding:24px 20px;}.form-grid{grid-template-columns:1fr;}
   .hero-meta{gap:20px;}footer{padding:20px;}
 }
 </style>
 </head>
 <body>
+
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading configuration...</div>
+</div>
 
 <!-- LOGIN MODAL -->
 <div class="overlay hide" id="loginModal">
@@ -211,30 +239,29 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
     <div class="nav-logo-icon">🐛</div>
     <span id="navName">Nexus<span>GG</span></span>
   </a>
-  <div class="nav-actions">
+  <div>
     <button class="nav-pill ghost" id="adminToggleBtn" onclick="handleAdminClick()">⚙ Admin Panel</button>
   </div>
 </nav>
 
 <div class="hero">
   <div class="hero-eyebrow"><span class="eyebrow-dot"></span><span id="heroTag">Bug Report Portal</span></div>
-  <h1 id="heroTitle">Report a Bug</h1>
+  <h1>Report a Bug</h1>
   <p id="heroDesc">Found something broken? Submit a detailed report and our team will investigate immediately.</p>
   <div class="hero-meta">
     <div class="hero-stat"><div class="hero-stat-num">24/7</div><div class="hero-stat-label">Monitored</div></div>
     <div class="hero-sep"></div>
-    <div class="hero-stat"><div class="hero-stat-num">&lt; 1h</div><div class="hero-stat-label">Response Time</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">&lt;1h</div><div class="hero-stat-label">Response</div></div>
     <div class="hero-sep"></div>
     <div class="hero-stat"><div class="hero-stat-num">Live</div><div class="hero-stat-label">Discord Alerts</div></div>
   </div>
 </div>
 
-<div class="page">
-<div class="container">
+<div class="page"><div class="container">
 
   <div class="status-bar warn" id="statusBar">
     <div class="s-dot off" id="sDot"></div>
-    <span id="sText">Discord webhook not configured — reports won't be sent until an admin sets it up.</span>
+    <span id="sText">Discord webhook not configured.</span>
   </div>
 
   <div class="form-card">
@@ -243,59 +270,25 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
       <p>Fill in as much detail as possible. You can paste a screenshot directly as proof.</p>
     </div>
     <div class="form-grid">
-
-      <div class="fg" id="usernameField">
-        <label>Your Username <span class="req">*</span></label>
-        <input type="text" id="username" placeholder="e.g. NovaStar99"/>
-      </div>
-
-      <div class="fg" id="severityField">
-        <label>Severity <span class="req">*</span></label>
-        <select id="severity"><option value="">Select severity...</option></select>
-      </div>
-
-      <div class="fg">
-        <label>Bug Title <span class="req">*</span></label>
-        <input type="text" id="bugTitle" placeholder="A brief description of the bug"/>
-      </div>
-
-      <div class="fg">
-        <label>Area / Section <span class="req">*</span></label>
-        <select id="area"><option value="">Select area...</option></select>
-      </div>
-
+      <div class="fg" id="usernameField"><label>Your Username <span class="req">*</span></label><input type="text" id="username" placeholder="e.g. NovaStar99"/></div>
+      <div class="fg" id="severityField"><label>Severity <span class="req">*</span></label><select id="severity"><option value="">Select severity...</option></select></div>
+      <div class="fg"><label>Bug Title <span class="req">*</span></label><input type="text" id="bugTitle" placeholder="A brief description of the bug"/></div>
+      <div class="fg"><label>Area / Section <span class="req">*</span></label><select id="area"><option value="">Select area...</option></select></div>
       <hr class="form-divider"/>
-
-      <div class="fg s2" id="stepsField">
-        <label>Steps to Reproduce</label>
-        <textarea id="steps" placeholder="1. Go to...&#10;2. Click on...&#10;3. See error..."></textarea>
-      </div>
-
-      <div class="fg s2" id="behaviorField">
-        <label>Expected vs Actual Behavior</label>
-        <textarea id="behavior" placeholder="What did you expect? What actually happened?" style="min-height:80px;"></textarea>
-      </div>
-
-      <div class="fg s2" id="notesField" style="display:none;">
-        <label>Additional Notes</label>
-        <textarea id="notes" placeholder="Anything else we should know..." style="min-height:72px;"></textarea>
-      </div>
-
+      <div class="fg s2" id="stepsField"><label>Steps to Reproduce</label><textarea id="steps" placeholder="1. Go to...&#10;2. Click on...&#10;3. See error..."></textarea></div>
+      <div class="fg s2" id="behaviorField"><label>Expected vs Actual Behavior</label><textarea id="behavior" placeholder="What did you expect? What actually happened?" style="min-height:80px;"></textarea></div>
+      <div class="fg s2" id="notesField" style="display:none;"><label>Additional Notes</label><textarea id="notes" placeholder="Anything else we should know..." style="min-height:72px;"></textarea></div>
       <hr class="form-divider"/>
-
-      <!-- SCREENSHOT PASTE ZONE -->
       <div class="fg s2">
         <label>Screenshot / Proof <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
         <div class="paste-zone" id="pasteZone" onclick="document.getElementById('fileInput').click()" tabindex="0">
           <div class="paste-zone-icon">📋</div>
           <div class="paste-zone-title">Paste, drag & drop, or click to upload</div>
-          <div class="paste-zone-sub">Press <kbd>Ctrl+V</kbd> after taking a screenshot · PNG, JPG, GIF, WebP supported</div>
+          <div class="paste-zone-sub">Press <kbd>Ctrl+V</kbd> anywhere · PNG, JPG, GIF, WebP · Max 8MB</div>
         </div>
         <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="handleFile(this.files[0])"/>
-
-        <!-- Preview -->
         <div class="img-preview" id="imgPreview">
-          <img class="img-thumb" id="imgThumb" src="" alt="Preview"/>
+          <img class="img-thumb" id="imgThumb" src="" alt=""/>
           <div class="img-info">
             <div class="img-name" id="imgName">screenshot.png</div>
             <div class="img-size" id="imgSize">0 KB</div>
@@ -304,9 +297,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
         </div>
         <img class="img-preview-large" id="imgLarge" src="" alt="" style="display:none;"/>
       </div>
-
     </div>
-
     <button class="submit-btn" id="submitBtn" onclick="submitReport()">
       <span id="btnText">Submit Bug Report</span>
       <div class="spinner" id="spinner"></div>
@@ -319,8 +310,42 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
     <div class="admin-hd">
       <div class="admin-hd-top"><div class="admin-badge">Admin Panel</div></div>
       <h2>Site Configuration</h2>
-      <p>All changes are saved to your browser locally.</p>
+      <p>Changes saved here go live instantly for all users via Firebase.</p>
     </div>
+
+    <!-- FIREBASE SETUP -->
+    <div class="firebase-setup">
+      <div class="firebase-setup-top">
+        <span style="font-size:20px;">🔥</span>
+        <h3>Firebase Connection</h3>
+        <span class="fb-status-pill disconnected" id="fbStatusPill">Not connected</span>
+      </div>
+      <p>Connect to Firebase Realtime Database so your settings sync instantly to all users. Follow these steps:</p>
+      <ol>
+        <li>Go to <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> → <strong>Create a project</strong> (any name)</li>
+        <li>In your project: <strong>Build → Realtime Database → Create database</strong></li>
+        <li>Choose <strong>Start in test mode</strong> → click Enable</li>
+        <li>Copy your <strong>Database URL</strong> (looks like <code style="color:var(--accent3)">https://your-app-default-rtdb.firebaseio.com</code>)</li>
+        <li>Go to <strong>Project Settings → Service accounts → Database secrets</strong> → copy the secret</li>
+      </ol>
+      <div class="fb-fields">
+        <div class="fb-field">
+          <label>Database URL</label>
+          <input type="text" id="fbUrl" placeholder="https://your-app-default-rtdb.firebaseio.com"/>
+          <span class="hint">No trailing slash. Found in Realtime Database → Data tab.</span>
+        </div>
+        <div class="fb-field">
+          <label>Database Secret</label>
+          <input type="password" id="fbSecret" placeholder="Your database secret key"/>
+          <span class="hint">Project Settings → Service accounts → Database secrets. This stays in your browser only.</span>
+        </div>
+        <div class="fb-test-row">
+          <button class="fb-connect-btn" onclick="connectFirebase()">Connect & Test</button>
+        </div>
+        <div class="fb-msg" id="fbMsg"></div>
+      </div>
+    </div>
+
     <div class="asects">
 
       <div class="acard">
@@ -335,7 +360,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
           <div class="af">
             <label>Accent Color</label>
             <input type="color" id="cfg_accent" value="#6366f1" style="width:56px;height:34px;border-radius:8px;border:1px solid var(--border2);background:var(--bg2);cursor:pointer;padding:3px;"/>
-            <span class="hint">Updates buttons and highlights across the site.</span>
           </div>
         </div>
       </div>
@@ -366,7 +390,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
         <div class="acard-body">
           <div class="af"><label>Webhook URL</label><input type="text" id="cfg_webhook" placeholder="https://discord.com/api/webhooks/..."/><span class="hint">Channel → Edit → Integrations → Webhooks → Copy URL.</span></div>
           <div class="af"><label>Bot Display Name</label><input type="text" id="cfg_botname" placeholder="e.g. Bug Reports Bot"/></div>
-          <div class="af"><label>Ping Role ID (optional)</label><input type="text" id="cfg_roleid" placeholder="Leave blank to disable"/><span class="hint">Developer Mode on → right-click role → Copy ID.</span></div>
+          <div class="af"><label>Ping Role ID (optional)</label><input type="text" id="cfg_roleid" placeholder="Leave blank to disable"/></div>
         </div>
       </div>
 
@@ -376,7 +400,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
           <span class="acard-arr">▼</span>
         </div>
         <div class="acard-body">
-          <span class="hint" style="display:block;margin-bottom:12px;">Color sets the Discord embed color for each severity.</span>
           <div class="tag-list" id="severityList"></div>
           <button class="add-btn" onclick="addSeverity()">+ Add Severity Level</button>
         </div>
@@ -400,9 +423,9 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
         </div>
         <div class="acard-body">
           <div class="trow"><div><div class="trow-label">Username field</div><div class="trow-sub">Ask for the reporter's name</div></div><label class="tog"><input type="checkbox" id="fld_username"/><span class="tog-sl"></span></label></div>
-          <div class="trow"><div><div class="trow-label">Steps to Reproduce</div><div class="trow-sub">Step-by-step instructions</div></div><label class="tog"><input type="checkbox" id="fld_steps"/><span class="tog-sl"></span></label></div>
-          <div class="trow"><div><div class="trow-label">Expected vs Actual</div><div class="trow-sub">What went wrong</div></div><label class="tog"><input type="checkbox" id="fld_behavior"/><span class="tog-sl"></span></label></div>
-          <div class="trow"><div><div class="trow-label">Additional Notes</div><div class="trow-sub">Free-form extra info</div></div><label class="tog"><input type="checkbox" id="fld_notes"/><span class="tog-sl"></span></label></div>
+          <div class="trow"><div><div class="trow-label">Steps to Reproduce</div></div><label class="tog"><input type="checkbox" id="fld_steps"/><span class="tog-sl"></span></label></div>
+          <div class="trow"><div><div class="trow-label">Expected vs Actual</div></div><label class="tog"><input type="checkbox" id="fld_behavior"/><span class="tog-sl"></span></label></div>
+          <div class="trow"><div><div class="trow-label">Additional Notes</div></div><label class="tog"><input type="checkbox" id="fld_notes"/><span class="tog-sl"></span></label></div>
         </div>
       </div>
 
@@ -415,17 +438,16 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
           <div class="trow"><div><div class="trow-label">Use severity color</div></div><label class="tog"><input type="checkbox" id="emb_color"/><span class="tog-sl"></span></label></div>
           <div class="trow"><div><div class="trow-label">Show timestamp</div></div><label class="tog"><input type="checkbox" id="emb_timestamp"/><span class="tog-sl"></span></label></div>
           <div class="trow"><div><div class="trow-label">Show footer</div></div><label class="tog"><input type="checkbox" id="emb_footer"/><span class="tog-sl"></span></label></div>
-          <div class="af" style="margin-top:14px;"><label>Footer Text</label><input type="text" id="emb_footertext" placeholder="e.g. NexusGG Bug Report System"/></div>
+          <div class="af" style="margin-top:14px;"><label>Footer Text</label><input type="text" id="emb_footertext"/></div>
         </div>
       </div>
 
     </div>
-    <button class="save-btn" onclick="saveConfig()">Save All Changes</button>
-    <div class="save-notice" id="saveNotice">✓ Configuration saved successfully.</div>
+    <button class="save-btn" id="saveBtn" onclick="saveConfig()">💾 Save & Publish to All Users</button>
+    <div class="save-notice" id="saveNotice"></div>
   </div>
 
-</div>
-</div>
+</div></div>
 
 <footer>
   <div class="footer-brand" id="footerBrand">Nexus<span>GG</span></div>
@@ -433,6 +455,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:28
 </footer>
 
 <script>
+// ── DEFAULTS ──
 const DEFAULT={
   name:'NexusGG',tagline:'Bug Report Portal',
   desc:"Found something broken? Submit a detailed report and our team will investigate immediately.",
@@ -448,12 +471,66 @@ const DEFAULT={
   embed:{color:true,timestamp:true,footer:true,footertext:'Bug Report System'},
 };
 
-let cfg=JSON.parse(localStorage.getItem('br_cfg')||'null')||JSON.parse(JSON.stringify(DEFAULT));
+let cfg=JSON.parse(JSON.stringify(DEFAULT));
 let adminPw=localStorage.getItem('br_pw')||'admin123';
-let adminOpen=false,loggedIn=false;
-let attachedFile=null; // stores the File object for screenshot
+let fbUrl=localStorage.getItem('br_fburl')||'';
+let fbSecret=localStorage.getItem('br_fbsecret')||'';
+let adminOpen=false,loggedIn=false,attachedFile=null;
 
-window.onload=()=>{applyBranding();renderSelects();applyFields();updateStatus();initPasteZone();};
+// ── INIT: load config from Firebase or fallback ──
+async function init(){
+  if(fbUrl){
+    try{
+      const res=await fetch(fbUrl+'/config.json');
+      if(res.ok){
+        const data=await res.json();
+        if(data)cfg=data;
+      }
+    }catch(e){}
+    updateFbStatus(true);
+  }
+  applyBranding();renderSelects();applyFields();updateStatus();initPasteZone();
+  document.getElementById('loadingScreen').classList.add('hide');
+}
+init();
+
+// ── FIREBASE ──
+async function connectFirebase(){
+  const url=document.getElementById('fbUrl').value.trim().replace(/\/$/,'');
+  const secret=document.getElementById('fbSecret').value.trim();
+  const msg=document.getElementById('fbMsg');
+  if(!url||!secret){showFbMsg('err','Please enter both the database URL and secret.');return;}
+
+  // Test write then read
+  try{
+    const testPayload={_test:true};
+    const putRes=await fetch(url+'/ping.json?auth='+secret,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(testPayload)});
+    if(!putRes.ok)throw new Error('Write failed: '+putRes.status);
+    const getRes=await fetch(url+'/ping.json');
+    if(!getRes.ok)throw new Error('Read failed');
+    // Clean up test node
+    await fetch(url+'/ping.json?auth='+secret,{method:'DELETE'});
+
+    fbUrl=url;fbSecret=secret;
+    localStorage.setItem('br_fburl',fbUrl);
+    localStorage.setItem('br_fbsecret',fbSecret);
+    updateFbStatus(true);
+    showFbMsg('ok','✓ Connected successfully! Your saves will now sync to all users.');
+    document.getElementById('fbUrl').value=url;
+  }catch(e){
+    showFbMsg('err','Connection failed — check your URL and secret. Make sure test mode is enabled.');
+  }
+}
+
+function showFbMsg(type,text){
+  const el=document.getElementById('fbMsg');
+  el.className='fb-msg '+type;el.textContent=text;el.style.display='block';
+}
+function updateFbStatus(connected){
+  const pill=document.getElementById('fbStatusPill');
+  pill.className='fb-status-pill '+(connected?'connected':'disconnected');
+  pill.textContent=connected?'Connected':'Not connected';
+}
 
 // ── BRANDING ──
 function applyBranding(){
@@ -463,11 +540,12 @@ function applyBranding(){
   document.documentElement.style.setProperty('--accent2',shade(a,18));
   document.documentElement.style.setProperty('--accent3',shade(a,35));
   const h=cfg.name.length,p1=cfg.name.slice(0,Math.ceil(h/2)),p2=cfg.name.slice(Math.ceil(h/2));
-  document.getElementById('navName').innerHTML=p1+'<span>'+p2+'</span>';
+  const logo=p1+'<span>'+p2+'</span>';
+  document.getElementById('navName').innerHTML=logo;
+  document.getElementById('footerBrand').innerHTML=logo;
   document.getElementById('heroTag').textContent=cfg.tagline;
   document.getElementById('heroDesc').textContent=cfg.desc;
   document.title=cfg.name+' — Bug Report';
-  document.getElementById('footerBrand').innerHTML=p1+'<span>'+p2+'</span>';
 }
 function updateStatus(){
   const ok=cfg.webhook&&cfg.webhook.startsWith('https://discord.com/api/webhooks/');
@@ -496,33 +574,15 @@ function applyFields(){
 // ── PASTE ZONE ──
 function initPasteZone(){
   const zone=document.getElementById('pasteZone');
-
-  // Paste anywhere on page
   document.addEventListener('paste',e=>{
     const items=e.clipboardData&&e.clipboardData.items;
     if(!items)return;
-    for(const item of items){
-      if(item.type.startsWith('image/')){
-        e.preventDefault();
-        handleFile(item.getAsFile());
-        break;
-      }
-    }
+    for(const item of items){if(item.type.startsWith('image/')){e.preventDefault();handleFile(item.getAsFile());break;}}
   });
-
-  // Drag & drop
   zone.addEventListener('dragover',e=>{e.preventDefault();zone.classList.add('drag-over');});
   zone.addEventListener('dragleave',()=>zone.classList.remove('drag-over'));
-  zone.addEventListener('drop',e=>{
-    e.preventDefault();zone.classList.remove('drag-over');
-    const file=e.dataTransfer.files[0];
-    if(file&&file.type.startsWith('image/'))handleFile(file);
-  });
-
-  // Keyboard trigger
-  zone.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' ')document.getElementById('fileInput').click();});
+  zone.addEventListener('drop',e=>{e.preventDefault();zone.classList.remove('drag-over');const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))handleFile(f);});
 }
-
 function handleFile(file){
   if(!file||!file.type.startsWith('image/')){alert('Please provide an image file.');return;}
   if(file.size>8*1024*1024){alert('Image must be under 8 MB.');return;}
@@ -536,7 +596,6 @@ function handleFile(file){
   document.getElementById('imgPreview').classList.add('show');
   document.getElementById('pasteZone').style.display='none';
 }
-
 function removeImage(){
   attachedFile=null;
   document.getElementById('imgPreview').classList.remove('show');
@@ -546,12 +605,7 @@ function removeImage(){
   document.getElementById('pasteZone').style.display='flex';
   document.getElementById('fileInput').value='';
 }
-
-function formatSize(bytes){
-  if(bytes<1024)return bytes+' B';
-  if(bytes<1024*1024)return Math.round(bytes/1024)+' KB';
-  return (bytes/(1024*1024)).toFixed(1)+' MB';
-}
+function formatSize(b){if(b<1024)return b+' B';if(b<1048576)return Math.round(b/1024)+' KB';return (b/1048576).toFixed(1)+' MB';}
 
 // ── AUTH ──
 function handleAdminClick(){
@@ -577,6 +631,7 @@ function openAdmin(){
   document.getElementById('adminToggleBtn').textContent='✕ Close Admin';
   document.getElementById('adminToggleBtn').classList.add('active-pill');
   loadAdminFields();
+  if(fbUrl){document.getElementById('fbUrl').value=fbUrl;updateFbStatus(true);}
   document.getElementById('adminPanel').scrollIntoView({behavior:'smooth'});
 }
 function toggleAdmin(){
@@ -587,7 +642,7 @@ function toggleAdmin(){
   if(adminOpen){loadAdminFields();document.getElementById('adminPanel').scrollIntoView({behavior:'smooth'});}
 }
 
-// ── ADMIN FIELDS ──
+// ── ADMIN LOAD ──
 function loadAdminFields(){
   document.getElementById('cfg_name').value=cfg.name;
   document.getElementById('cfg_tagline').value=cfg.tagline;
@@ -610,7 +665,7 @@ function renderSevList(){
   const l=document.getElementById('severityList');l.innerHTML='';
   cfg.severities.forEach((s,i)=>{
     const r=document.createElement('div');r.className='tag-row';
-    r.innerHTML=`<input type="color" value="${s.color}" onchange="cfg.severities[${i}].color=this.value" title="Embed color"/><input type="text" value="${s.label}" onchange="cfg.severities[${i}].label=this.value" placeholder="Label..."/><button class="del-btn" onclick="cfg.severities.splice(${i},1);renderSevList()">✕</button>`;
+    r.innerHTML=`<input type="color" value="${s.color}" onchange="cfg.severities[${i}].color=this.value"/><input type="text" value="${s.label}" onchange="cfg.severities[${i}].label=this.value" placeholder="Label..."/><button class="del-btn" onclick="cfg.severities.splice(${i},1);renderSevList()">✕</button>`;
     l.appendChild(r);
   });
 }
@@ -625,8 +680,8 @@ function renderAreaList(){
 }
 function addArea(){cfg.areas.push('New Area');renderAreaList();}
 
-// ── SAVE ──
-function saveConfig(){
+// ── SAVE TO FIREBASE ──
+async function saveConfig(){
   cfg.name=document.getElementById('cfg_name').value.trim()||'Community';
   cfg.tagline=document.getElementById('cfg_tagline').value.trim();
   cfg.desc=document.getElementById('cfg_desc').value.trim();
@@ -636,19 +691,41 @@ function saveConfig(){
   cfg.roleid=document.getElementById('cfg_roleid').value.trim();
   cfg.fields={username:document.getElementById('fld_username').checked,steps:document.getElementById('fld_steps').checked,behavior:document.getElementById('fld_behavior').checked,notes:document.getElementById('fld_notes').checked};
   cfg.embed={color:document.getElementById('emb_color').checked,timestamp:document.getElementById('emb_timestamp').checked,footer:document.getElementById('emb_footer').checked,footertext:document.getElementById('emb_footertext').value.trim()};
-  localStorage.setItem('br_cfg',JSON.stringify(cfg));
+
+  const btn=document.getElementById('saveBtn');
+  const notice=document.getElementById('saveNotice');
+  btn.disabled=true;btn.textContent='Saving...';
+
+  if(fbUrl&&fbSecret){
+    try{
+      const res=await fetch(fbUrl+'/config.json?auth='+fbSecret,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(cfg)});
+      if(res.ok||res.status===200){
+        notice.className='save-notice ok';notice.textContent='✓ Saved to Firebase — all users will see changes instantly.';
+      }else{
+        notice.className='save-notice err';notice.textContent='Firebase save failed ('+res.status+'). Check your secret key.';
+      }
+    }catch{
+      notice.className='save-notice err';notice.textContent='Network error saving to Firebase.';
+    }
+  }else{
+    notice.className='save-notice err';notice.textContent='⚠ Firebase not connected — changes only saved locally. Connect Firebase above to sync to all users.';
+  }
+
+  notice.style.display='block';
+  setTimeout(()=>notice.style.display='none',5000);
+  btn.disabled=false;btn.textContent='💾 Save & Publish to All Users';
   applyBranding();renderSelects();applyFields();updateStatus();
-  const n=document.getElementById('saveNotice');n.style.display='block';
-  setTimeout(()=>n.style.display='none',3000);
 }
+
+// ── CHANGE PW ──
 function changePassword(){
   const p1=document.getElementById('newPw1').value,p2=document.getElementById('newPw2').value;
   const msg=document.getElementById('pwMsg');
-  if(!p1||p1.length<4){msg.style.color='#fb7185';msg.textContent='Password must be at least 4 characters.';return;}
+  if(!p1||p1.length<4){msg.style.color='#fb7185';msg.textContent='At least 4 characters required.';return;}
   if(p1!==p2){msg.style.color='#fb7185';msg.textContent='Passwords do not match.';return;}
   adminPw=p1;localStorage.setItem('br_pw',adminPw);
   document.getElementById('newPw1').value='';document.getElementById('newPw2').value='';
-  msg.style.color='#4ade80';msg.textContent='✓ Password updated successfully.';
+  msg.style.color='#4ade80';msg.textContent='✓ Password updated.';
   setTimeout(()=>msg.textContent='',4000);
 }
 
@@ -657,13 +734,9 @@ async function submitReport(){
   const g=id=>{const el=document.getElementById(id);return el?el.value.trim():'';};
   const username=g('username'),severity=g('severity'),bugTitle=g('bugTitle'),
         area=g('area'),steps=g('steps'),behavior=g('behavior'),notes=g('notes');
-  if(!bugTitle||!severity||!area){showResult('err','Please fill in all required fields (title, severity, area).');return;}
-  if(!cfg.webhook||!cfg.webhook.startsWith('https://discord.com/api/webhooks/')){
-    showResult('err','Webhook not configured. Ask an admin to set it up in the Admin Panel.');return;
-  }
+  if(!bugTitle||!severity||!area){showResult('err','Please fill in all required fields.');return;}
+  if(!cfg.webhook||!cfg.webhook.startsWith('https://discord.com/api/webhooks/')){showResult('err','Webhook not configured yet.');return;}
   setLoading(true);
-
-  // Build embed
   const matched=cfg.severities.find(s=>s.label===severity);
   const color=matched&&cfg.embed.color?hexInt(matched.color):4886754;
   const fields=[];
@@ -672,19 +745,15 @@ async function submitReport(){
   if(steps)fields.push({name:'Steps to Reproduce',value:steps});
   if(behavior)fields.push({name:'Expected vs Actual',value:behavior});
   if(notes)fields.push({name:'Additional Notes',value:notes});
-  if(attachedFile)fields.push({name:'Screenshot','value':'See attached image below 👇'});
-
+  if(attachedFile)fields.push({name:'Screenshot',value:'See attached image below 👇'});
   const embed={title:'🐛 New Bug Report',color,fields};
   if(cfg.embed.timestamp)embed.timestamp=new Date().toISOString();
   if(cfg.embed.footer)embed.footer={text:cfg.embed.footertext||cfg.name+' Bug Report System'};
-
   const payload={username:cfg.botname||'Bug Reports Bot',embeds:[embed]};
   if(cfg.roleid)payload.content=`<@&${cfg.roleid}>`;
-
   try{
     let res;
     if(attachedFile){
-      // Send as multipart/form-data so Discord gets the image as a real attachment
       const form=new FormData();
       form.append('payload_json',JSON.stringify(payload));
       form.append('file',attachedFile,attachedFile.name||'screenshot.png');
@@ -692,14 +761,9 @@ async function submitReport(){
     }else{
       res=await fetch(cfg.webhook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
     }
-
-    if(res.ok||res.status===204){
-      showResult('ok','✓ Report submitted successfully. Our team will investigate shortly.');
-      clearForm();
-    }else{
-      showResult('err','Discord rejected the request ('+res.status+'). Check your webhook URL.');
-    }
-  }catch{showResult('err','Network error. Please check your connection and try again.');}
+    if(res.ok||res.status===204){showResult('ok','✓ Report submitted! Our team will investigate shortly.');clearForm();}
+    else showResult('err','Discord rejected the request. Check your webhook URL.');
+  }catch{showResult('err','Network error. Please try again.');}
   setLoading(false);
 }
 
@@ -716,26 +780,10 @@ function clearForm(){
   ['username','severity','bugTitle','area','steps','behavior','notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   removeImage();
 }
-
-// ── ACCORDION ──
-function toggleCard(hd){
-  const body=hd.nextElementSibling,arr=hd.querySelector('.acard-arr');
-  body.classList.toggle('open');arr.classList.toggle('open',body.classList.contains('open'));
-}
-
-// ── UTILS ──
+function toggleCard(hd){const body=hd.nextElementSibling,arr=hd.querySelector('.acard-arr');body.classList.toggle('open');arr.classList.toggle('open',body.classList.contains('open'));}
 function hexInt(hex){return parseInt(hex.replace('#',''),16);}
-function shade(hex,pct){
-  const n=parseInt(hex.replace('#',''),16);
-  const r=Math.min(255,Math.max(0,(n>>16)+Math.round(255*pct/100)));
-  const g=Math.min(255,Math.max(0,((n>>8)&0xff)+Math.round(255*pct/100)));
-  const b=Math.min(255,Math.max(0,(n&0xff)+Math.round(255*pct/100)));
-  return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
-}
-function hexToRgba(hex,a){
-  const n=parseInt(hex.replace('#',''),16);
-  return`rgba(${n>>16},${(n>>8)&0xff},${n&0xff},${a})`;
-}
+function shade(hex,pct){const n=parseInt(hex.replace('#',''),16);const r=Math.min(255,Math.max(0,(n>>16)+Math.round(255*pct/100)));const g=Math.min(255,Math.max(0,((n>>8)&0xff)+Math.round(255*pct/100)));const b=Math.min(255,Math.max(0,(n&0xff)+Math.round(255*pct/100)));return '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');}
+function hexToRgba(hex,a){const n=parseInt(hex.replace('#',''),16);return`rgba(${n>>16},${(n>>8)&0xff},${n&0xff},${a})`;}
 </script>
 </body>
 </html>
